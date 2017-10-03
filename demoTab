@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DemoTab</title>
+<style>
+/* common */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+} 
+.clearfix {
+    content: '';
+    display: block;
+    clear: both;
+} 
+.wrap {
+    width: 602px;
+    margin: 0 auto;
+    margin-top: 50px;
+    border: 1px solid #ccc;   
+} 
+ul {
+    list-style: none;
+}
+/* header */
+.header > li {
+    text-align: center;
+    float: left;
+    width: 200px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+}
+.header > li:last-child {
+    border-right: none;
+}
+.header .activate {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+/* ct */
+.ct {
+    width: 602px;
+    min-height: 200px;
+}
+.ct li {
+    padding: 10px;
+    display: none;
+}
+.ct .open {
+    display: block;
+}
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <ul class="header clearfix">
+            <li class="activate">tab1</li>
+            <li>tab2</li>
+            <li>tab3</li>
+        </ul>
+        <ul class="ct">
+            <li class="open">ct1</li>
+            <li>ct2</li>
+            <li>ct3</li>
+        </ul>
+    </div> 
+<script>
+    var tabs = document.querySelectorAll(".header > li")
+    var cts = document.querySelectorAll(".ct > li")
+    tabs.forEach(function(tab,index) {
+        tab.addEventListener('click', function() {
+            for(var i = 0; i < tabs.length; i++) {
+                if(i !== index) {
+                    tabs[i].classList.remove('activate')
+                    cts[i].classList.remove('open')
+                }
+            }
+            this.classList.add('activate')
+            cts[index].classList.add('open')
+        })
+    } )
+</script>  
+</body>
+</html>
