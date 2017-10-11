@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<style>
+#ct {
+    list-style: none;
+}
+li {
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+li:hover {
+    background-color: green;
+}
+.btn {
+    display: block;
+    width:80px;
+    text-align: center;
+    color: #E27272;
+    cursor: pointer;
+    margin: 10px auto;
+    padding: 10px;
+    text-decoration: none;
+    border: 1px solid #E27272;
+    border-radius: 3px;
+}
+.btn:active {
+    color: rgb(241, 189, 189);
+}
+</style>
+</head>
+<body>
+  <ul id="ct"></ul>
+  <a href="#" id="load-more" class="btn">加载更多</a>
+
+<script>
+var btn = document.querySelector('#load-more')
+var ct = document.querySelector('#ct')
+
+btn.addEventListener('click', function (e) {
+    e.preventDefault()
+    var script = document.createElement('script')
+    script.src = 'http://localhost:8080/news?&callback=render'
+    document.head.appendChild(script)
+    document.head.removeChild(script)
+})
+
+function render(news) {
+    var newCt = document.createDocumentFragment()
+    for (var i = 0; i < news.length; i++) {
+        var node = document.createElement('li')
+        node.innerText = news[i]
+        newCt.appendChild(node)
+    }
+    ct.appendChild(newCt)
+}
+
+
+</script> 
+</body>
+</html>

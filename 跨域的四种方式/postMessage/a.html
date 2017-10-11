@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>postMessage-a</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+.ct {
+  width: 900px;
+  margin: 0 auto;
+}
+.main {
+  width: 450px;
+  height: 400px;
+  float: left;
+  border: 1px solid #ccc;
+}
+input {
+  width: 200px;
+  height: 40px;
+  margin: 10px;
+}
+iframe {
+  width: 450px;
+  height: 400px;
+  float: right;
+  border: 1px dashed #ccc;
+}
+
+</style>
+  </head>
+  <body>
+    <div class="ct">
+      <div class="main">
+        <input type="text" placeholder="http://a.shenwl.com:8080/a.html" value="">
+      </div>
+
+      <iframe src="http://localhost:8080/b.html" frameborder="0" ></iframe>
+    </div>
+
+<script>
+$('.main input').addEventListener('input', function() {
+  window.frames[0].postMessage(this.value, '*')
+})
+window.addEventListener('message', function(e) {
+  $('.main input').value = e.data
+  console.log(e.data)
+})
+
+function $(id) {
+  return document.querySelector(id)
+}
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>postMessage-b</title>
+<style>
+html, body {
+  margin: 0;
+}
+input {
+  width: 200px;
+  height: 40px;
+  margin: 10px;
+}
+
+</style>
+  </head>
+  <body>
+    <div class="main">
+      <input type="text" placeholder="http://localhost:8080/b.html" value="">
+    </div>
+<script>
+$('.main input').addEventListener('input', function() {
+  window.parent.postMessage(this.value, '*')
+})
+window.addEventListener('message', function(e) {
+  $('.main input').value = e.data
+  console.log(e.data)
+})
+
+function $(id) {
+  return document.querySelector(id)
+}
+</script>
+  </body>
+</html>
