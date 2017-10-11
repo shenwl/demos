@@ -6,14 +6,14 @@
     2. 创建script标签，src的地址执行后端的接口，最后加个参数callback=func
     3. 后端在接受到请求后解析参数，计算返还数据，输出func(data)字符串
     4. func(data)会放到script标签作为js执行，此时会调用func函数，data为参数
-    - [代码演示]()
+    - [代码演示](https://github.com/shenwl/demos/tree/master/%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F)
 
 ### CORS
 - 跨域资源共享，是一种ajax跨域请求资源的方式，支持现代浏览器和IE10以上
 - 浏览器发现我们发送的XMLHttpRequest不符合同源策略，就给该请求加一个请求头：Origin；后端在返回结果中加一个响应头：Access-Control-Allow-Origin；浏览器判断该响应头中是否包含Origin的值，若包含，则处理响应我们就能拿到数据，反之直接驳回，我们拿不到数据。
 - CORS的实现方式很简单，只要在后端加一条代码（处理比较简单，不贴demo）：
 ```
-res.header('Access-Control-Allow-Origin','[允许的域名，*代表所有域名的请求都回应])
+res.header('Access-Control-Allow-Origin','[允许的域名，*代表所有域名的请求都回应]')
 ```
 
 ### 降域实现
@@ -29,4 +29,4 @@ document.domain = 'xxx.com'
 
 ### postMessage
 - 不同域下，互相不访问，只向对方发送数据，对方接受认可数据，则可以使用（用互相发送数据的方式达到跨域目的）
-- [代码演示]()
+- [代码演示](https://github.com/shenwl/demos/tree/master/%E8%B7%A8%E5%9F%9F%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F)
