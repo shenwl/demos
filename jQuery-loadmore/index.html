@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+#ct {
+    list-style: none;
+}
+li {
+    margin: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+li:hover {
+    background-color: green;
+}
+.btn {
+    display: block;
+    width: 100px;
+    text-align: center;
+    color: #E27272;
+    cursor: pointer;
+    margin: 10px auto;
+    padding: 10px;
+    text-decoration: none;
+    border: 1px solid #E27272;
+    border-radius: 3px;
+}
+.btn:active {
+    color: rgb(241, 189, 189);
+}
+</style>
+</head>
+<body>
+  <ul id="ct"></ul>
+  <a href="#" id="load-more" class="btn">加载更多</a>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+var $btn = $('#load-more')
+var $ct = $('#ct')
+var newsIndex = 0
+
+$btn.on('click', function(e) {
+    e.preventDefault()
+    $.get('/getNews', {index: newsIndex}).done(function(result) {
+        if(result.status === 0) {
+            appendHtml(result.data)
+            newsIndex += 3
+        }else {
+            alert('获取失败')
+        }
+    }).fail(function() {
+        alert('系统异常')
+    })
+
+    function appendHtml(news) {
+        var htmls = ''
+        $.each(news, function(){
+            htmls += '<li>' + this + '</li>'
+        })
+        $ct.append(htmls)
+    }
+})
+
+
+
+
+
+
+
+
+</script>
+  
+</body>
+</html>
