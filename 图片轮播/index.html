@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="show">
+        <ul class="img-ct clearfix">
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt=""></a>
+            </li>
+        </ul>
+        <a href="#" class="left arrow"><</a>
+        <a href="#" class="right arrow">></a>
+        <ul class="bullet-ct">
+            <li class="active"></li>    
+            <li></li>    
+            <li></li>    
+            <li></li>    
+        </ul>    
+    </div>
+<script src="http://code.jquery.com/jquery-3.2.1.min.js
+"></script>
+<script>
+var $btnL = $('.show>.left')
+var $btnR = $('.show>.right')
+var $imgCt = $('.show .img-ct')
+var $imgs = $('.show>.img-ct>li')
+
+var imgCount = $imgs.length
+var imgWidth = $imgs.width()
+var pageIndex = 0
+var isAnimate = true
+
+var $bullets = $('.bullet-ct>li')
+
+$imgCt.append($imgs.first().clone())
+$imgCt.prepend($imgs.last().clone())
+$imgCt.width((imgCount + 2) * imgWidth)
+$imgCt.css({left: -imgWidth})
+
+$btnL.on('click', function() {
+    if (!isAnimate) return
+    playLeft(1)
+})
+$btnR.on('click', function() {
+    if (!isAnimate) return
+    playRight(1)    
+})
+function playLeft(len) {
+    isAnimate = false
+    $imgCt.animate({
+        left: '+=' + len*imgWidth
+    }, 500, function(){
+        pageIndex -= len 
+        whichBullet()
+        if(pageIndex === -1) {
+            toLastImg()
+        }
+        isAnimate = true  
+    }) 
+}
+function playRight(len) {
+    isAnimate = false
+    $imgCt.animate({
+        left: '-=' + len*imgWidth
+    }, 500, function() {
+        pageIndex += len  
+        whichBullet()
+        if(pageIndex === imgCount){
+        toFirstImg()
+        }
+        isAnimate = true 
+    }) 
+}
+function toFirstImg() {
+    $imgCt.css({left: -imgWidth})
+    pageIndex = 0
+    whichBullet()
+}
+function toLastImg() {
+    $imgCt.css({left: -imgCount*imgWidth})
+    pageIndex = imgCount - 1
+    whichBullet()
+}
+function whichBullet() {
+    $bullets.removeClass('active').eq(pageIndex).addClass('active')
+}
+$bullets.on('click', function(){
+    var index = $(this).index()
+    if(pageIndex > index) {
+        playLeft(pageIndex - index)
+    }else if(pageIndex < index) {
+        playRight(index - pageIndex)
+    }
+})
+
+</script>
+    
+</body>
+</html>
