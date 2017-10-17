@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>渐变轮播</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="show">
+        <ul class="img-ct">
+            <li class="appear">
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt=""></a>
+            </li>
+        </ul>
+        <a href="#" class="left arrow"><</a>
+        <a href="#" class="right arrow">></a>
+        <ul class="bullet-ct">
+            <li class="active"></li>    
+            <li></li>    
+            <li></li>    
+            <li></li>    
+        </ul>    
+    </div>
+<script src="http://code.jquery.com/jquery-3.2.1.min.js
+"></script>
+<script>
+var $btnPre = $('.show>.left')
+var $btnNext = $('.show>.right')
+var $imgs = $('.show>.img-ct>li')
+var imgCount = $imgs.length
+var pageIndex = 0
+var isAnimate = true
+var $bullets = $('.bullet-ct>li')
+
+setInterval(function(){
+    $btnNext.trigger('click')
+}, 1500)
+$btnPre.on('click', function() {
+    if(!isAnimate) return
+    pageIndex -= 1
+    if (pageIndex === -1) {
+        pageIndex = imgCount - 1
+    }
+    showImg(pageIndex)
+})
+$btnNext.on('click', function() {
+    if(!isAnimate) return
+    pageIndex += 1
+    if (pageIndex === imgCount) {
+        pageIndex = 0
+    }
+    showImg(pageIndex) 
+})
+
+function showImg(pageIndex) {
+    isAnimate = false  
+    $imgs.parent().find('.appear').animate({
+        opacity: 0
+    }, function() {
+        $(this).removeClass('appear')
+    })
+    $imgs.eq(pageIndex).animate({
+        opacity: 1
+    }, function() {
+        $(this).addClass('appear')
+        isAnimate = true
+    }) 
+    showBullet(pageIndex)  
+}
+function showBullet(pageIndex) {
+    $bullets.removeClass('active')
+    $bullets.eq(pageIndex).addClass('active')
+}
+$bullets.on('click', function(){
+    var index = $(this).index()
+    pageIndex = index
+    showImg(pageIndex)
+})
+</script>
+    
+</body>
+</html>
