@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tab</title>
+<style>
+/* common */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+} 
+.clearfix {
+    content: '';
+    display: block;
+    clear: both;
+} 
+.ct {
+    width: 602px;
+    margin: 0 auto;
+    margin-top: 50px;
+    border: 1px solid #ccc;   
+} 
+ul {
+    list-style: none;
+}
+/* header */
+.header > li {
+    text-align: center;
+    float: left;
+    width: 200px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 5px;
+}
+.header > li:last-child {
+    border-right: none;
+}
+.header .active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+/* .panel */
+.panels {
+    width: 602px;
+    min-height: 200px;
+}
+.panels li {
+    padding: 10px;
+    display: none;
+}
+.panels .open {
+    display: block;
+}
+</style>
+</head>
+<body>
+    <div class="ct">
+        <ul class="header clearfix">
+            <li class="active">tab1</li>
+            <li>tab2</li>
+            <li>tab3</li>
+        </ul>
+        <ul class="panels">
+            <li class="open">ct1</li>
+            <li>ct2</li>
+            <li>ct3</li>
+        </ul>
+    </div> 
+    <div class="ct">
+        <ul class="header clearfix">
+            <li class="active">tab1</li>
+            <li>tab2</li>
+            <li>tab3</li>
+        </ul>
+        <ul class="panels">
+            <li class="open">ct1</li>
+            <li>ct2</li>
+            <li>ct3</li>
+        </ul>
+    </div> 
+<script>
+    // var log = console.log.bind(console)
+    function Tab(ct) {
+        this.ct = ct
+        this.tabs = ct.querySelectorAll('.header>li')
+        this.panels = ct.querySelectorAll('.panels>li')
+        this.bind()
+    }
+    Tab.prototype.bind = function() {
+        var _this = this
+        this.tabs.forEach(function(tab, index) {
+            tab.addEventListener('click', function(e) {
+                var target = e.target
+                _this.tabs.forEach(function(tab, index) {
+                    tab.classList.remove('active')
+                })
+                _this.panels.forEach(function(panel, index) {
+                    panel.classList.remove('open')
+                })
+                target.classList.add('active')
+                _this.panels[index].classList.add('open')
+            })
+        } )
+    }
+    var tab1 = new Tab(document.querySelectorAll('.ct')[0])
+    var tab2 = new Tab(document.querySelectorAll('.ct')[1])
+</script>  
+</body>
+</html>

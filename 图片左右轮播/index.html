@@ -2,11 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>轮播</title>
-    <link rel="stylesheet" href="./style.css">
+    <title>Carousel</title>
+    <style>
+        /* common */
+        ul, li {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .clearfix {
+            content: '';
+            display: block;
+            clear: both;
+        }
+        /* ct */
+        .ct {
+            position: relative;
+            width: 320px;
+            height: 180px;
+            overflow: hidden;
+        }
+        .ct .img-ct {
+            position: absolute;
+            width: 1280px;
+        }
+        .ct .img-ct li {
+            float: left;
+        }
+        .ct .img-ct img {
+            width: 320px;
+            height: 180px;   
+        }
+        /* arrow */
+        .arrow {
+            position: absolute;
+            top: 50%;
+            margin-top: -15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            color: #fff;
+            text-decoration: none;
+            line-height: 27px;
+            text-align: center;
+            z-index: 1;
+        }
+        .arrow:hover {
+            opacity: 0.7;
+        }
+        .left {
+            left: 10px;
+        }
+        .right {
+            right: 10px;
+        }
+        /* bullet */
+        .bullet-ct {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            font-size: 0;
+            text-align: center;
+            z-index: 1;
+        }
+        .bullet-ct li {
+            display: inline-block;
+            width: 30px;
+            height: 5px;
+            margin: 0 5px;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .bullet-ct .active {
+            background-color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <div class="show">
+    <div class="ct">
+        <ul class="img-ct clearfix">
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/3.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/4.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/5.jpg" alt=""></a>
+            </li>
+        </ul>
+        <a href="#" class="left arrow"><</a>
+        <a href="#" class="right arrow">></a>
+        <ul class="bullet-ct">
+            <li class="active"></li>    
+            <li></li>    
+            <li></li>    
+            <li></li>    
+        </ul>    
+    </div>
+    <div class="ct">
         <ul class="img-ct clearfix">
             <li>
                 <a href="#"><img src="http://cdn.jirengu.com/book.jirengu.com/img/2.jpg" alt=""></a>
@@ -33,79 +132,92 @@
 <script src="http://code.jquery.com/jquery-3.2.1.min.js
 "></script>
 <script>
-var $btnL = $('.show>.left')
-var $btnR = $('.show>.right')
-var $imgCt = $('.show .img-ct')
-var $imgs = $('.show>.img-ct>li')
-
-var imgCount = $imgs.length
-var imgWidth = $imgs.width()
-var pageIndex = 0
-var isAnimate = true
-
-var $bullets = $('.bullet-ct>li')
-
-$imgCt.append($imgs.first().clone())
-$imgCt.prepend($imgs.last().clone())
-$imgCt.width((imgCount + 2) * imgWidth)
-$imgCt.css({left: -imgWidth})
-
-$btnL.on('click', function() {
-    if (!isAnimate) return
-    playLeft(1)
-})
-$btnR.on('click', function() {
-    if (!isAnimate) return
-    playRight(1)    
-})
-function playLeft(len) {
-    isAnimate = false
-    $imgCt.animate({
-        left: '+=' + len*imgWidth
-    }, 500, function(){
-        pageIndex -= len 
-        whichBullet()
-        if(pageIndex === -1) {
-            toLastImg()
-        }
-        isAnimate = true  
-    }) 
-}
-function playRight(len) {
-    isAnimate = false
-    $imgCt.animate({
-        left: '-=' + len*imgWidth
-    }, 500, function() {
-        pageIndex += len  
-        whichBullet()
-        if(pageIndex === imgCount){
-        toFirstImg()
-        }
-        isAnimate = true 
-    }) 
-}
-function toFirstImg() {
-    $imgCt.css({left: -imgWidth})
-    pageIndex = 0
-    whichBullet()
-}
-function toLastImg() {
-    $imgCt.css({left: -imgCount*imgWidth})
-    pageIndex = imgCount - 1
-    whichBullet()
-}
-function whichBullet() {
-    $bullets.removeClass('active').eq(pageIndex).addClass('active')
-}
-$bullets.on('click', function(){
-    var index = $(this).index()
-    if(pageIndex > index) {
-        playLeft(pageIndex - index)
-    }else if(pageIndex < index) {
-        playRight(index - pageIndex)
+    // var log = console.log.bind(console)
+    function Carousel($ct) {
+        this.$ct = $ct
+        this.init()
+        this.bind()      
     }
-})
+    Carousel.prototype.init = function() {
+        this.$btnPre = this.$ct.find('.left')
+        this.$btnNext = this.$ct.find('.right')
+        this.$imgCt = this.$ct.find('.img-ct')
+        this.$imgs = this.$ct.find('.img-ct>li')
+        this.imgCount = this.$imgs.length
+        this.imgWidth = this.$imgs.width()
+        this.pageIndex = 0
+        this.isAnimate = true
+        this.$bullets = this.$ct.find('.bullet-ct>li')
 
+        this.$imgCt.append(this.$imgs.first().clone())
+        this.$imgCt.prepend(this.$imgs.last().clone())
+        this.$imgCt.width((this.imgCount + 2) * this.imgWidth)
+        this.$imgCt.css({left: -this.imgWidth})
+    }
+    Carousel.prototype.bind = function() {
+        var _this = this
+        this.$btnPre.on('click', function() {
+            if (!_this.isAnimate) return
+            _this.playPre(1)
+        })
+        this.$btnNext.on('click', function() {
+            if (!_this.isAnimate) return
+            _this.playNext(1)    
+        })
+        this.$bullets.on('click', function(e){
+            var target = e.target
+            var index = $(target).index()
+            if(_this.pageIndex > index) {
+                _this.playPre(_this.pageIndex - index)
+            }else if(_this.pageIndex < index) {
+                _this.playNext(index - _this.pageIndex)
+            }
+        })
+    }
+    Carousel.prototype.playPre = function(len) {
+        var _this = this
+        this.isAnimate = false
+        this.$imgCt.animate({
+            left: '+=' + len*this.imgWidth
+        }, 500, function(){
+            _this.pageIndex -= len 
+            _this.whichBullet()
+            if(_this.pageIndex === -1) {
+                _this.toLastImg()
+            }
+            _this.isAnimate = true  
+        }) 
+    }
+    Carousel.prototype.playNext = function(len) {
+        var _this = this
+        this.isAnimate = false
+        this.$imgCt.animate({
+            left: '-=' + len*this.imgWidth
+        }, 500, function() {
+            _this.pageIndex += len  
+            _this.whichBullet()
+            if(_this.pageIndex === _this.imgCount){
+                _this.toFirstImg()
+            }
+            _this.isAnimate = true 
+        }) 
+    }
+    Carousel.prototype.toFirstImg = function() {
+        this.$imgCt.css({left: -this.imgWidth})
+        this.pageIndex = 0
+        this.whichBullet()
+    }
+    Carousel.prototype.toLastImg = function() {
+        this.$imgCt.css({left: -this.imgCount*this.imgWidth})
+        this.pageIndex = this.imgCount - 1
+        this.whichBullet()
+    }
+    Carousel.prototype.whichBullet = function() {
+        this.$bullets.removeClass('active').eq(this.pageIndex).addClass('active')
+    }
+
+    var carousel1 = new Carousel($('.ct').eq(0))
+    var carousel2 = new Carousel($('.ct').eq(1))
 </script>
     
 </body>

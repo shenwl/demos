@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <style>
+        img {
+            width: 200px;
+            height: 200px;
+        }
+        ul {
+            display: flex;
+            justify-items: center;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0 auto;
+            width: 420px;
+            text-align: center;
+        }
+        li {
+            width: 200px;
+            height: 200px;
+            display: inline-block;
+            margin-left: 10px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+        <li>
+            <img src="" temp="" alt="">
+        </li>
+
+    </ul>
+<script>
+var imgUrl = [
+'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1695062158,4284186673&fm=11&gp=0.jpg',
+'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=301873414,3593276524&fm=27&gp=0.jpg',
+'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3916224684,1537747311&fm=27&gp=0.jpg',
+'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3766537472,2590671832&fm=27&gp=0.jpg',
+'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=329553831,2895593226&fm=27&gp=0.jpg',
+'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3136076878,2201825243&fm=27&gp=0.jpg',
+'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1498843229,3304076960&fm=27&gp=0.jpg',
+'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=863405019,823452643&fm=27&gp=0.jpg',
+'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1843228476,1414922410&fm=27&gp=0.jpg',
+'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3277547302,3515396079&fm=11&gp=0.jpg',
+'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=153816530,1269954380&fm=11&gp=0.jpg',
+'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2034564027,2978670121&fm=11&gp=0.jpg',
+'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=866263633,4163502817&fm=27&gp=0.jpg',
+'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3490910432,3691522109&fm=27&gp=0.jpg'
+]
+var $img = $('img')
+$img.each(function(elem, index){
+    $(this).attr('temp', imgUrl[$(this).parent().index()])
+})
+imgRender()
+
+var clock
+$(window).on('scroll', function() { 
+    if(clock) {
+        clearTimeout(clock)
+    } 
+    clock = setTimeout(function(){
+        imgRender()
+    }, 400)    
+}) 
+function isVisible($node) {
+    var nodeT = $node.offset().top
+    var nodeH = $node.outerHeight()
+    var windowH = $(window).height()
+    var scrollT = $(window).scrollTop()
+    if(nodeT + nodeH > scrollT  && nodeT < windowH + scrollT) {
+        return true
+    }
+    return false
+}
+function imgRender() {
+    $img.each(function(){
+       if(isVisible($(this)) && !isLoaded($(this))) {
+           loadImg($(this))
+       }
+    })
+
+} 
+function loadImg($img) {
+    $img.attr('src', $img.attr('temp'))
+}
+function isLoaded($img) {
+    return $img.attr('src') === $img.attr('temp')
+}
+</script>  
+</body>
+</html>

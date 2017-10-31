@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>waterFallNews</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.clearfix::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.wrap {
+    position: relative;
+}
+.news-ct {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+    margin-top: 20px;
+    list-style: none;
+}
+.news-ct li {
+    position: absolute;
+    width: 300px;
+    padding: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    opacity: 0;
+    transition: all .8s;
+}
+.news-ct li a {
+    text-decoration: none;
+    color: black;
+    text-align: left;
+}
+.news-ct li a img {
+    width: 100%;
+}
+.news-ct li a h3 {
+    border-bottom: 1px solid #ccc;
+    padding-top: 10px;
+}
+.news-ct li a p {
+    font-size: 12px;
+    color: rgba(0,0,0,.5);
+    padding-top: 10px;
+}
+.empty {
+    display: none;
+}
+#load {
+    visibility: hidden;
+    height: 20px;
+}
+
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <ul class="news-ct">
+            <li class="empty"></li>
+        </ul>
+        <div id="load"></div>
+    </div>
+
+<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+var colSumHeight = []
+var $ct = $('.news-ct')
+var $nodes = $('.news-ct li')
+var ctWidth = $ct.width()
+var nodeWidth = $nodes.outerWidth(true)
+
+
+for(let i = 0; i < parseInt(ctWidth / nodeWidth); i++) {
+    colSumHeight[i] = 0
+}
+
+var curPage = 1
+var perPage = 10
+
+
+
+getData(render)
+
+function render(newsList) {
+    $.each(newsList, function(idx, item) {
+        var $node = getNode(item)
+        $node.find('img').on('load' ,function(){
+            $ct.append($node)
+            putNode($node)
+        })
+    })
+}
+
+function getData(callback){
+    $.ajax({
+        url: 'http://platform.sina.com.cn/slide/album_tech',
+        method: 'GET',
+        dataType: 'jsonp',
+        jsonp: 'jsoncallback',
+        data: {
+            app_key: '1271687855',
+            num: perPage,
+            page: curPage,
+        }
+    }).done(function(result) {
+        if(result && result.status && result.status.code === '0') {
+            callback(result.data)
+            curPage ++
+        }else {
+            console.log('数据获取失败')
+        }
+    })
+}
+
+function getNode(item) {
+    var node = ''
+    node += '<li class="item">'
+    node += '<a href="' + item.url + '">'
+    node += '<img src="' + item.img_url + '">'
+    node += '<h3>' + item.short_name + '</h3>'
+    node += '<p>' + item.short_intro + '</p>'
+    node += '</a></li>'
+    return $(node)
+    console.log($(node))
+}
+
+function waterFall($nodes) {
+    $nodes.each(function() {
+        putNode($(this))
+    })   
+}
+function putNode($node) {
+    var minItem = Math.min.apply(null, colSumHeight)
+    var minIndex = colSumHeight.indexOf(minItem)
+    $node.css({
+        top: minItem,
+        left: nodeWidth * minIndex,
+        opacity: 1
+    })
+    colSumHeight[minIndex] += $node.outerHeight(true)
+    $('.news-ct').height(Math.max.apply(null, colSumHeight))
+} 
+
+$(window).on('scroll', function() {
+    if(isVisible($('#load'))) {
+        getData(render)
+    }
+})
+
+function isVisible($node) {
+    var nodeT = $node.offset().top
+    var nodeH = $node.outerHeight()
+    var windowH = $(window).height()
+    var scrollT = $(window).scrollTop()
+    if(nodeT < windowH + scrollT + 400) {
+        return true
+    }
+    return false
+}
+</script>    
+</body>
+</html>

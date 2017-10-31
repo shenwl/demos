@@ -9,21 +9,21 @@ ul, li {
     display: block;
     clear: both;
 }
-/* show */
-.show {
+/* ct */
+.ct {
     position: relative;
     width: 320px;
     height: 180px;
     overflow: hidden;
 }
-.show .img-ct {
+.ct .img-ct {
     position: absolute;
     width: 1280px;
 }
-.show .img-ct li {
+.ct .img-ct li {
     float: left;
 }
-.show .img-ct img {
+.ct .img-ct img {
     width: 320px;
     height: 180px;   
 }

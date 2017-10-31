@@ -1,0 +1,33 @@
+/* reset */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+ul li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+/* img-ct */
+.img-ct {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.img-row {
+    margin-top: 10px;
+}
+.img-row::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.img-box {
+    float: left;
+    padding:5px;    
+}
+.img-box img {
+    height: 100%;
+    width: 100%;
+}
