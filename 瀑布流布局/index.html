@@ -106,37 +106,37 @@ ul {
 <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
 
-var $cards = $('.img-ct li')
+function WaterFall($ct, $nodes) {
+    this.$ct = $ct
+    this.$nodes = $nodes
 
-waterFall($cards)
+    this.waterFall()
 
-$(window).resize(function(){
-    waterFall($cards)
-})
-
-function waterFall($cards) {
-    var colSumHeight = []
-    var $ct = $('.img-ct')
-    var ctWidth = $ct.width()
-    var cardWidth = $cards.outerWidth(true)
-
-    for(let i = 0; i < parseInt(ctWidth / cardWidth); i++) {
-        colSumHeight.push(0)
-    }
-    $cards.each(function() {
-        putCard($(this))
-    })
-    function putCard($card) {
-        var minItem = Math.min.apply(null, colSumHeight)
-        var minIndex = colSumHeight.indexOf(minItem)
-        console.log(minItem)
-        $card.css({
-            top: minItem,
-            left: cardWidth * minIndex
-        })
-        colSumHeight[minIndex] += $card.outerHeight(true)
-    }    
 }
+WaterFall.prototype.waterFall = function() {
+    var _this = this
+    this.colSumHeight = []
+    this.ctWidth = this.$ct.width()
+    this.nodeWidth = this.$nodes.outerWidth(true)
+
+    for(let i = 0; i < parseInt(this.ctWidth / this.nodeWidth); i++) {
+        this.colSumHeight.push(0)
+    }
+    this.$nodes.each(function() {
+        _this.putNode($(this))
+    })
+}
+WaterFall.prototype.putNode = function($node) {
+    var minItem = Math.min.apply(null, this.colSumHeight)
+    var minIndex = this.colSumHeight.indexOf(minItem)
+    $node.css({
+        top: minItem,
+        left: this.nodeWidth * minIndex
+    })
+    this.colSumHeight[minIndex] += $node.outerHeight(true)
+}
+new WaterFall($('.img-ct'), $('.img-ct>li'))
+
 </script>    
 </body>
 </html>

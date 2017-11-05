@@ -69,37 +69,40 @@
         <div id="load"></div>
     </div>
 
-<script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
-var colSumHeight = []
-var $ct = $('.news-ct')
-var $nodes = $('.news-ct li')
-var ctWidth = $ct.width()
-var nodeWidth = $nodes.outerWidth(true)
+var log = console.log.bind(console)
 
-
-for(let i = 0; i < parseInt(ctWidth / nodeWidth); i++) {
-    colSumHeight[i] = 0
+function WaterFall($ct, $load) {
+    this.$ct = $ct
+    this.$load = $load
+    this.colSumHeight = []
+    this.$nodes = this.$ct.find('li')
+    this.ctWidth = this.$ct.width()
+    this.nodeWidth = this.$nodes.outerWidth(true)
+    for(var i = 0; i < parseInt(this.ctWidth / this.nodeWidth); i++) {
+        this.colSumHeight[i] = 0
+    }
+    this.init()
+    this.bind()
 }
+WaterFall.prototype.init = function() {
+    this.curPage = 1
+    this.perPage = 10
 
-var curPage = 1
-var perPage = 10
-
-
-
-getData(render)
-
-function render(newsList) {
-    $.each(newsList, function(idx, item) {
-        var $node = getNode(item)
-        $node.find('img').on('load' ,function(){
-            $ct.append($node)
-            putNode($node)
-        })
+    this.getData(this.render)
+}
+WaterFall.prototype.bind = function() {
+    var _this = this
+    $(window).on('scroll', function() {
+        if(_this.isVisible(_this.$load)) {
+            _this.getData(_this.render)
+        }
     })
 }
-
-function getData(callback){
+//示例，通过sina news api获取新闻数据
+WaterFall.prototype.getData = function(callback) {
+    var _this = this
     $.ajax({
         url: 'http://platform.sina.com.cn/slide/album_tech',
         method: 'GET',
@@ -107,20 +110,28 @@ function getData(callback){
         jsonp: 'jsoncallback',
         data: {
             app_key: '1271687855',
-            num: perPage,
-            page: curPage,
+            num: _this.perPage,
+            page: _this.curPage,
         }
     }).done(function(result) {
         if(result && result.status && result.status.code === '0') {
-            callback(result.data)
-            curPage ++
+            callback(result.data, _this)
+            _this.curPage ++
         }else {
-            console.log('数据获取失败')
+            alert('数据获取失败')
         }
     })
 }
-
-function getNode(item) {
+WaterFall.prototype.render = function(newsList, _this) {
+    $.each(newsList, function(idx, item) {
+        var $node = _this.getNode(item)
+        $node.find('img').on('load' ,function(){
+            _this.$ct.append($node)
+            _this.putNode($node)
+        })
+    })
+}
+WaterFall.prototype.getNode = function(item) {
     var node = ''
     node += '<li class="item">'
     node += '<a href="' + item.url + '">'
@@ -129,33 +140,20 @@ function getNode(item) {
     node += '<p>' + item.short_intro + '</p>'
     node += '</a></li>'
     return $(node)
-    console.log($(node))
 }
-
-function waterFall($nodes) {
-    $nodes.each(function() {
-        putNode($(this))
-    })   
-}
-function putNode($node) {
-    var minItem = Math.min.apply(null, colSumHeight)
-    var minIndex = colSumHeight.indexOf(minItem)
+WaterFall.prototype.putNode = function($node) {
+    var _this = this
+    var minItem = Math.min.apply(null, this.colSumHeight)
+    var minIndex =  this.colSumHeight.indexOf(minItem)
     $node.css({
         top: minItem,
-        left: nodeWidth * minIndex,
+        left: _this.nodeWidth * minIndex,
         opacity: 1
     })
-    colSumHeight[minIndex] += $node.outerHeight(true)
-    $('.news-ct').height(Math.max.apply(null, colSumHeight))
-} 
-
-$(window).on('scroll', function() {
-    if(isVisible($('#load'))) {
-        getData(render)
-    }
-})
-
-function isVisible($node) {
+    this.colSumHeight[minIndex] += $node.outerHeight(true)
+    this.$ct.height(Math.max.apply(null, this.colSumHeight))
+}
+WaterFall.prototype.isVisible = function($node) {
     var nodeT = $node.offset().top
     var nodeH = $node.outerHeight()
     var windowH = $(window).height()
@@ -165,6 +163,105 @@ function isVisible($node) {
     }
     return false
 }
+
+
+var waterfall = new WaterFall($('news-ct'), $('#load'))
+
+
+// var colSumHeight = []
+// var $ct = $('.news-ct')
+// var $nodes = $('.news-ct li')
+// var ctWidth = $ct.width()
+// var nodeWidth = $nodes.outerWidth(true)
+
+
+// for(var i = 0; i < parseInt(ctWidth / nodeWidth); i++) {
+//     colSumHeight[i] = 0
+// }
+
+// var curPage = 1
+// var perPage = 10
+
+
+
+// getData(render)
+
+// function render(newsList) {
+//     $.each(newsList, function(idx, item) {
+//         var $node = getNode(item)
+//         $node.find('img').on('load' ,function(){
+//             $ct.append($node)
+//             putNode($node)
+//         })
+//     })
+// }
+
+// function getData(callback){
+//     $.ajax({
+//         url: 'http://platform.sina.com.cn/slide/album_tech',
+//         method: 'GET',
+//         dataType: 'jsonp',
+//         jsonp: 'jsoncallback',
+//         data: {
+//             app_key: '1271687855',
+//             num: perPage,
+//             page: curPage,
+//         }
+//     }).done(function(result) {
+//         if(result && result.status && result.status.code === '0') {
+//             callback(result.data)
+//             curPage ++
+//         }else {
+//             console.log('数据获取失败')
+//         }
+//     })
+// }
+
+// function getNode(item) {
+//     var node = ''
+//     node += '<li class="item">'
+//     node += '<a href="' + item.url + '">'
+//     node += '<img src="' + item.img_url + '">'
+//     node += '<h3>' + item.short_name + '</h3>'
+//     node += '<p>' + item.short_intro + '</p>'
+//     node += '</a></li>'
+//     return $(node)
+//     console.log($(node))
+// }
+
+// function waterFall($nodes) {
+//     $nodes.each(function() {
+//         putNode($(this))
+//     })   
+// }
+// function putNode($node) {
+//     var minItem = Math.min.apply(null, colSumHeight)
+//     var minIndex = colSumHeight.indexOf(minItem)
+//     $node.css({
+//         top: minItem,
+//         left: nodeWidth * minIndex,
+//         opacity: 1
+//     })
+//     colSumHeight[minIndex] += $node.outerHeight(true)
+//     $('.news-ct').height(Math.max.apply(null, colSumHeight))
+// } 
+
+// $(window).on('scroll', function() {
+//     if(isVisible($('#load'))) {
+//         getData(render)
+//     }
+// })
+
+// function isVisible($node) {
+//     var nodeT = $node.offset().top
+//     var nodeH = $node.outerHeight()
+//     var windowH = $(window).height()
+//     var scrollT = $(window).scrollTop()
+//     if(nodeT < windowH + scrollT + 400) {
+//         return true
+//     }
+//     return false
+// }
 </script>    
 </body>
 </html>

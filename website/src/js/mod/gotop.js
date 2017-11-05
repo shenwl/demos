@@ -1,50 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <meta charset="utf-8">
-  <title>GoTop</title>
-</head>
-  <style>
-    * {
-      padding: 0;
-      margin: 0;
-    }
-    li {
-      list-style: none;
-      height: 500px;
-      background-color: pink;
-    }
-    .gotop {
-      position: fixed;
-      bottom: 50px;
-      right: 20px;
-      opacity: 0
-    }
-    .btn {
-      padding: 10px 15px;
-      background-color: yellow;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn:hover {
-      opacity: .4;
-    }
-  </style>
-<body>
-  <ul>
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-    <li>4</li>
-    <li>5</li>
-    <li>6</li>
-    <li>7</li>
-    <li>8</li>
-    <li>9</li>
-    <li>10</li>
-  </ul>
-<script>
+define([
+    'jquery',
+], function($) {
     function GoTop($ct) {
         this.ct = $ct
         this.target = $('<a class="btn">GoTop</a>')
@@ -55,12 +11,13 @@
         var ct = this.ct
         var target = this.target
         $(window).on('scroll', function () {
-            if ($(window).scrollTop() === 0) {
+            if($(window).scrollTop() === 0) {
                 ct.css({
                     opacity: 0
                 })
             } else {
                 setTimeout(function () {
+                    if($(window).scrollTop() === 0) return
                     ct.css({
                         opacity: 1
                     })
@@ -81,7 +38,5 @@
         this.ct.append(this.target)
         $('body').append(this.ct)
     }
-    var btn = new GoTop($('<div class="gotop"></div>'))
-</script>
-</body>
-</html>
+    return GoTop
+})
