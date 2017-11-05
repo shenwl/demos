@@ -8,8 +8,8 @@ requirejs.config({
     }
 })
 
-require(['jquery', 'carousel', 'gotop', 'loadmore','waterfall'], 
-function($, Carousel, GoTop, LoadMore, WaterFall) {
+require(['jquery', 'carousel', 'gotop', 'waterfall'], 
+function($, Carousel, GoTop, WaterFall) {
     new Carousel($('.bg-img'))
     new GoTop($('<div class="gotop"></div>'))
     new WaterFall($('.img-wall'), $('.load-more'))
