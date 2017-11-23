@@ -1,5 +1,5 @@
 # demos
-一些JS的学习Demo  
-UI小仓库
+初学前端时写的一些小demo
+
 
 
