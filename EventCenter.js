@@ -24,13 +24,13 @@ var Event = (function() {
 		off: off,
 		fire: fire
 	}
-	
+
 })()
 
 
 //调用
 Event.on('change', function(val){
-    console.log('change...  now val is ' + val) 
+    console.log('change...  now val is ' + val)
 })
-Event.fire('change', '饥人谷')
+Event.fire('change', 'xxx')
 Event.off('change')
